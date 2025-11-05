@@ -8,35 +8,35 @@ import javax.persistence.Table;
 @Table(name = "lawyers")
 public class Lawyer {
 
-	@Id
-	private Long register;
-	private String name;
-	private Integer customersNumber;
-	
-	public Lawyer() {
-	}
+    @Id
+    private Long register;
+    private String name;
+    private Integer customersNumber;
 
-	public Long getRegister() {
-		return register;
-	}
+    public Lawyer() {
+    }
 
-	public void setRegister(Long register) {
-		this.register = register;
-	}
+    public Long getRegister() {
+        return register;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setRegister(Long register) {
+        this.register = register;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Integer getCustomersNumber() {
-		return customersNumber;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setCustomersNumber(Integer customersNumber) {
-		this.customersNumber = customersNumber;
-	}
+    public Integer getCustomersNumber() {
+        return customersNumber;
+    }
+
+    public void setCustomersNumber(Integer customersNumber) {
+        this.customersNumber = customersNumber;
+    }
 }
