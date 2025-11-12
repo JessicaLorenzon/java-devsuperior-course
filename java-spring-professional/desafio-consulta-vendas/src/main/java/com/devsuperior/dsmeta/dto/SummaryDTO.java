@@ -3,20 +3,20 @@ package com.devsuperior.dsmeta.dto;
 import com.devsuperior.dsmeta.entities.Sale;
 import com.devsuperior.dsmeta.entities.Seller;
 
-public class SumaryDTO {
+public class SummaryDTO {
 
     private String sellerName;
     private Double total;
 
-    public SumaryDTO() {
+    public SummaryDTO() {
     }
 
-    public SumaryDTO(String sellerName, Double total) {
+    public SummaryDTO(String sellerName, Double total) {
         this.sellerName = sellerName;
         this.total = total;
     }
 
-    public SumaryDTO(Seller entity) {
+    public SummaryDTO(Seller entity) {
         sellerName = entity.getName();
         for (Sale sale : entity.getSales()) {
             total += sale.getAmount();
