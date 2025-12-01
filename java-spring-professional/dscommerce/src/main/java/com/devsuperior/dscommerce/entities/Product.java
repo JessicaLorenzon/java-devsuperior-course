@@ -30,7 +30,7 @@ public class Product {
     private final Set<Category> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "id.product")
-    private Set<OrderItem> items = new HashSet<>();
+    private final Set<OrderItem> items = new HashSet<>();
 
     public Product() {
     }

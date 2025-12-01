@@ -11,7 +11,7 @@ import java.util.Objects;
 public class OrderItem {
 
     @EmbeddedId
-    private OrderItemPK id = new OrderItemPK();
+    private final OrderItemPK id = new OrderItemPK();
 
     private Integer quantity;
     private Double price;
