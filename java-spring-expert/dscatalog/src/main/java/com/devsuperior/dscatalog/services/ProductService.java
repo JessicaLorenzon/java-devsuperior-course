@@ -11,6 +11,7 @@ import com.devsuperior.dscatalog.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -63,13 +64,13 @@ public class ProductService {
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("ID " + id + " not found");
-        }
+
         try {
             repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("ID " + id + " not found");
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Referential integrity failure");
+            throw new DatabaseException("Integrity violation");
         }
     }
 
