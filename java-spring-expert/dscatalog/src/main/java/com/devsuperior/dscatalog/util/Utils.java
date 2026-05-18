@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.util;
 
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.projections.IdProjection;
 import com.devsuperior.dscatalog.projections.ProductProjection;
 
 import java.util.ArrayList;
@@ -10,14 +11,14 @@ import java.util.Map;
 
 public class Utils {
 
-    public static List<Product> replace(List<ProductProjection> ordered, List<Product> unordered) {
-        Map<Long, Product> map = new HashMap<>();
-        for (Product obj : unordered) {
+    public static <ID> List<? extends IdProjection<ID>> replace(List<? extends IdProjection<ID>> ordered, List<? extends IdProjection<ID>> unordered) {
+        Map<ID, IdProjection<ID>> map = new HashMap<>();
+        for (IdProjection<ID> obj : unordered) {
             map.put(obj.getId(), obj);
         }
 
-        List<Product> result = new ArrayList<>();
-        for (ProductProjection obj : ordered) {
+        List<IdProjection<ID>> result = new ArrayList<>();
+        for (IdProjection<ID> obj : ordered) {
             result.add(map.get(obj.getId()));
         }
 
