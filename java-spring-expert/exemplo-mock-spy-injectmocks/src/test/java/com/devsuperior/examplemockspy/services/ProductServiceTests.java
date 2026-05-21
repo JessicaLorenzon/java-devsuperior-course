@@ -4,7 +4,9 @@ import com.devsuperior.examplemockspy.dto.ProductDTO;
 import com.devsuperior.examplemockspy.entities.Product;
 import com.devsuperior.examplemockspy.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,10 +19,10 @@ import static org.mockito.ArgumentMatchers.any;
 public class ProductServiceTests {
 
     @InjectMocks
-    private ProductService productService;
+    private ProductService service;
 
     @Mock
-    private ProductRepository productRepository;
+    private ProductRepository repository;
 
     private Long existingId, nonExistingId;
     private Product product;
@@ -34,9 +36,21 @@ public class ProductServiceTests {
         product = new Product(1L, "Playstation", 2000.0);
         productDTO = new ProductDTO(product);
 
-        Mockito.when(productRepository.save(any())).thenReturn(product);
+        Mockito.when(repository.save(any())).thenReturn(product);
 
-        Mockito.when(productRepository.getReferenceById(existingId)).thenReturn(product);
-        Mockito.when(productRepository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+        Mockito.when(repository.getReferenceById(existingId)).thenReturn(product);
+        Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+    }
+
+    @Test
+    public void insertShouldReturnProductDTOWhenValidDate() {
+        ProductService serviceSpy = Mockito.spy(service);
+
+        Mockito.doNothing().when(serviceSpy).validateData(productDTO);
+
+        ProductDTO result = serviceSpy.insert(productDTO);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getName(), "Playstation");
     }
 }
