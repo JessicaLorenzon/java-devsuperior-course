@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.devsuperior.dscommerce.DscommerceApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 32.55 s -- in com.devsuperior.dscommerce.DscommerceApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 36.05 s -- in com.devsuperior.dscommerce.DscommerceApplicationTests
