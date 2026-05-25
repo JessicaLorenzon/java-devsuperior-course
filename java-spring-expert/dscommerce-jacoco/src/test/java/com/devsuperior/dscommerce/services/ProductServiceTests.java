@@ -1,6 +1,7 @@
 package com.devsuperior.dscommerce.services;
 
 import com.devsuperior.dscommerce.dto.ProductDTO;
+import com.devsuperior.dscommerce.dto.ProductMinDTO;
 import com.devsuperior.dscommerce.entities.Product;
 import com.devsuperior.dscommerce.repositories.ProductRepository;
 import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
@@ -13,8 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTests {
@@ -28,6 +36,7 @@ public class ProductServiceTests {
     private long existingProductId, nonExistingProductId;
     private String productName;
     private Product product;
+    private PageImpl<Product> page;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -37,7 +46,7 @@ public class ProductServiceTests {
         productName = "PlayStation 5";
 
         product = ProductFactory.createProduct(productName);
-
+        page = new PageImpl<>(List.of(product));
     }
 
     @Test
@@ -58,5 +67,17 @@ public class ProductServiceTests {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             service.findById(nonExistingProductId);
         });
+    }
+
+    @Test
+    public void findAllShouldReturnPageProductMinDTO() {
+        Mockito.when(repository.searchByName(any(), (Pageable) any())).thenReturn(page);
+
+        Pageable pageable = PageRequest.of(0, 12);
+        Page<ProductMinDTO> result = service.findAll(productName, pageable);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getSize(), 1);
+        Assertions.assertEquals(result.iterator().next().getName(), productName);
     }
 }
