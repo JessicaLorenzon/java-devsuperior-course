@@ -27,9 +27,9 @@ import jakarta.persistence.EntityNotFoundException;
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-<span class="nc" id="L30">        Product product = repository.findById(id).orElseThrow(</span>
-<span class="nc" id="L31">                () -&gt; new ResourceNotFoundException(&quot;Recurso não encontrado&quot;));</span>
-<span class="nc" id="L32">        return new ProductDTO(product);</span>
+<span class="fc" id="L30">        Product product = repository.findById(id).orElseThrow(</span>
+<span class="fc" id="L31">                () -&gt; new ResourceNotFoundException(&quot;Recurso não encontrado&quot;));</span>
+<span class="fc" id="L32">        return new ProductDTO(product);</span>
     }
 
     @Transactional(readOnly = true)

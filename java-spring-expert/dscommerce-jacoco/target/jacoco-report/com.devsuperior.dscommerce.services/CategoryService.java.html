@@ -18,8 +18,8 @@ import com.devsuperior.dscommerce.repositories.CategoryRepository;
 
     @Transactional(readOnly = true)
     public List&lt;CategoryDTO&gt; findAll() {
-<span class="nc" id="L21">        List&lt;Category&gt; result = repository.findAll();</span>
-<span class="nc" id="L22">        return result.stream().map(x -&gt; new CategoryDTO(x)).toList();</span>
+<span class="fc" id="L21">        List&lt;Category&gt; result = repository.findAll();</span>
+<span class="fc" id="L22">        return result.stream().map(x -&gt; new CategoryDTO(x)).toList();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

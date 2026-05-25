@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,4 +46,5 @@ public class CategoryServiceTests {
         Assertions.assertEquals(result.size(), 1);
         Assertions.assertEquals(result.get(0).getId(), category.getId());
     }
+
 }
