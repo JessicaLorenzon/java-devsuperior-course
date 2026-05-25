@@ -49,28 +49,28 @@ import jakarta.persistence.EntityNotFoundException;
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         try {
-<span class="nc" id="L52">            Product entity = repository.getReferenceById(id);</span>
-<span class="nc" id="L53">            copyDtoToEntity(dto, entity);</span>
-<span class="nc" id="L54">            entity = repository.save(entity);</span>
-<span class="nc" id="L55">            return new ProductDTO(entity);</span>
+<span class="fc" id="L52">            Product entity = repository.getReferenceById(id);</span>
+<span class="fc" id="L53">            copyDtoToEntity(dto, entity);</span>
+<span class="fc" id="L54">            entity = repository.save(entity);</span>
+<span class="fc" id="L55">            return new ProductDTO(entity);</span>
         }
-<span class="nc" id="L57">        catch (EntityNotFoundException e) {</span>
-<span class="nc" id="L58">            throw new ResourceNotFoundException(&quot;Recurso não encontrado&quot;);</span>
+<span class="fc" id="L57">        catch (EntityNotFoundException e) {</span>
+<span class="fc" id="L58">            throw new ResourceNotFoundException(&quot;Recurso não encontrado&quot;);</span>
         }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
-<span class="nc bnc" id="L64" title="All 2 branches missed.">    	if (!repository.existsById(id)) {</span>
-<span class="nc" id="L65">    		throw new ResourceNotFoundException(&quot;Recurso não encontrado&quot;);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">    	if (!repository.existsById(id)) {</span>
+<span class="fc" id="L65">    		throw new ResourceNotFoundException(&quot;Recurso não encontrado&quot;);</span>
     	}
     	try {
-<span class="nc" id="L68">            repository.deleteById(id);    		</span>
+<span class="fc" id="L68">            repository.deleteById(id);    		</span>
     	}
-<span class="nc" id="L70">        catch (DataIntegrityViolationException e) {</span>
-<span class="nc" id="L71">            throw new DatabaseException(&quot;Falha de integridade referencial&quot;);</span>
-<span class="nc" id="L72">        }</span>
-<span class="nc" id="L73">    }</span>
+<span class="fc" id="L70">        catch (DataIntegrityViolationException e) {</span>
+<span class="fc" id="L71">            throw new DatabaseException(&quot;Falha de integridade referencial&quot;);</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">    }</span>
 
     private void copyDtoToEntity(ProductDTO dto, Product entity) {
 <span class="fc" id="L76">        entity.setName(dto.getName());</span>
