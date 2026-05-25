@@ -6,6 +6,7 @@ import com.devsuperior.dscommerce.entities.Product;
 import com.devsuperior.dscommerce.repositories.ProductRepository;
 import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscommerce.tests.ProductFactory;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,12 +50,17 @@ public class ProductServiceTests {
         product = ProductFactory.createProduct(productName);
         productDTO = new ProductDTO(product);
         page = new PageImpl<>(List.of(product));
+
+        Mockito.when(repository.findById(existingProductId)).thenReturn(Optional.of(product));
+        Mockito.when(repository.findById(nonExistingProductId)).thenReturn(Optional.empty());
+        Mockito.when(repository.searchByName(any(), (Pageable) any())).thenReturn(page);
+        Mockito.when(repository.save(any())).thenReturn(product);
+        Mockito.when(repository.getReferenceById(existingProductId)).thenReturn(product);
+        Mockito.when(repository.getReferenceById(nonExistingProductId)).thenThrow(EntityNotFoundException.class);
     }
 
     @Test
     public void findByIdShouldReturnProductDTOWhenIdExists() {
-        Mockito.when(repository.findById(existingProductId)).thenReturn(Optional.of(product));
-
         ProductDTO result = service.findById(existingProductId);
 
         Assertions.assertNotNull(result);
@@ -64,8 +70,6 @@ public class ProductServiceTests {
 
     @Test
     public void findByIdShouldReturnResourceNotFoundExceptionWhenIdDoesNotExist() {
-        Mockito.when(repository.findById(nonExistingProductId)).thenReturn(Optional.empty());
-
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             service.findById(nonExistingProductId);
         });
@@ -73,8 +77,6 @@ public class ProductServiceTests {
 
     @Test
     public void findAllShouldReturnPageProductMinDTO() {
-        Mockito.when(repository.searchByName(any(), (Pageable) any())).thenReturn(page);
-
         Pageable pageable = PageRequest.of(0, 12);
         Page<ProductMinDTO> result = service.findAll(productName, pageable);
 
@@ -85,11 +87,25 @@ public class ProductServiceTests {
 
     @Test
     public void insertShouldReturnProductDTO() {
-        Mockito.when(repository.save(any())).thenReturn(product);
-
         ProductDTO result = service.insert(productDTO);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getId(), product.getId());
+    }
+
+    @Test
+    public void updateShouldReturnProductDTOWhenIdExists() {
+        ProductDTO result = service.update(existingProductId, productDTO);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getId(), existingProductId);
+        Assertions.assertEquals(result.getName(), productDTO.getName());
+    }
+
+    @Test
+    public void updateShouldReturnResourceNotFoundExceptionWhenIdDoesNotExist() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.update(nonExistingProductId, productDTO);
+        });
     }
 }
