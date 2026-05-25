@@ -13,18 +13,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 public class ProductServiceTests {
 
     @InjectMocks
@@ -36,6 +36,7 @@ public class ProductServiceTests {
     private long existingProductId, nonExistingProductId;
     private String productName;
     private Product product;
+    private ProductDTO productDTO;
     private PageImpl<Product> page;
 
     @BeforeEach
@@ -46,6 +47,7 @@ public class ProductServiceTests {
         productName = "PlayStation 5";
 
         product = ProductFactory.createProduct(productName);
+        productDTO = new ProductDTO(product);
         page = new PageImpl<>(List.of(product));
     }
 
@@ -79,5 +81,15 @@ public class ProductServiceTests {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getSize(), 1);
         Assertions.assertEquals(result.iterator().next().getName(), productName);
+    }
+
+    @Test
+    public void insertShouldReturnProductDTO() {
+        Mockito.when(repository.save(any())).thenReturn(product);
+
+        ProductDTO result = service.insert(productDTO);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getId(), product.getId());
     }
 }
