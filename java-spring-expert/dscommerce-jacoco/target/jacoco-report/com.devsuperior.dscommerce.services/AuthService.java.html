@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
     @Autowired
     private UserService userService;
 
-    public void validateSelfOrAdmin(long userId) {
+    public void validateSelfOrAdmin(Long userId) {
 <span class="fc" id="L15">        User me = userService.authenticated();</span>
 <span class="fc bfc" id="L16" title="All 2 branches covered.">        if (me.hasRole(&quot;ROLE_ADMIN&quot;)) {</span>
 <span class="fc" id="L17">            return;</span>

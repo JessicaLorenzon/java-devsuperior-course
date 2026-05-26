@@ -38,33 +38,33 @@ import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
 
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id) {
-<span class="nc" id="L41">        Order order = repository.findById(id).orElseThrow(</span>
-<span class="nc" id="L42">                () -&gt; new ResourceNotFoundException(&quot;Recurso não encontrado&quot;));</span>
-<span class="nc" id="L43">        authService.validateSelfOrAdmin(order.getClient().getId());</span>
-<span class="nc" id="L44">        return new OrderDTO(order);</span>
+<span class="fc" id="L41">        Order order = repository.findById(id).orElseThrow(</span>
+<span class="fc" id="L42">                () -&gt; new ResourceNotFoundException(&quot;Recurso não encontrado&quot;));</span>
+<span class="fc" id="L43">        authService.validateSelfOrAdmin(order.getClient().getId());</span>
+<span class="fc" id="L44">        return new OrderDTO(order);</span>
     }
 
     @Transactional
 	public OrderDTO insert(OrderDTO dto) {
 		
-<span class="nc" id="L50">    	Order order = new Order();</span>
+<span class="fc" id="L50">    	Order order = new Order();</span>
     	
-<span class="nc" id="L52">    	order.setMoment(Instant.now());</span>
-<span class="nc" id="L53">    	order.setStatus(OrderStatus.WAITING_PAYMENT);</span>
+<span class="fc" id="L52">    	order.setMoment(Instant.now());</span>
+<span class="fc" id="L53">    	order.setStatus(OrderStatus.WAITING_PAYMENT);</span>
     	
-<span class="nc" id="L55">    	User user = userService.authenticated();</span>
-<span class="nc" id="L56">    	order.setClient(user);</span>
+<span class="fc" id="L55">    	User user = userService.authenticated();</span>
+<span class="fc" id="L56">    	order.setClient(user);</span>
     	
-<span class="nc bnc" id="L58" title="All 2 branches missed.">    	for (OrderItemDTO itemDto : dto.getItems()) {</span>
-<span class="nc" id="L59">    		Product product = productRepository.getReferenceById(itemDto.getProductId());</span>
-<span class="nc" id="L60">    		OrderItem item = new OrderItem(order, product, itemDto.getQuantity(), product.getPrice());</span>
-<span class="nc" id="L61">    		order.getItems().add(item);</span>
-<span class="nc" id="L62">    	}</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">    	for (OrderItemDTO itemDto : dto.getItems()) {</span>
+<span class="fc" id="L59">    		Product product = productRepository.getReferenceById(itemDto.getProductId());</span>
+<span class="fc" id="L60">    		OrderItem item = new OrderItem(order, product, itemDto.getQuantity(), product.getPrice());</span>
+<span class="fc" id="L61">    		order.getItems().add(item);</span>
+<span class="fc" id="L62">    	}</span>
     	
-<span class="nc" id="L64">    	repository.save(order);</span>
-<span class="nc" id="L65">    	orderItemRepository.saveAll(order.getItems());</span>
+<span class="fc" id="L64">    	order = repository.save(order);</span>
+<span class="fc" id="L65">    	orderItemRepository.saveAll(order.getItems());</span>
     	
-<span class="nc" id="L67">    	return new OrderDTO(order);</span>
+<span class="fc" id="L67">    	return new OrderDTO(order);</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
