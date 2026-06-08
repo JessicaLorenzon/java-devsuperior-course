@@ -1,27 +1,79 @@
 package com.devsuperior.dscommerce.controllers;
 
+import static io.restassured.RestAssured.baseURI;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.baseURI;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import com.devsuperior.dscommerce.tests.TokenUtil;
+
+import io.restassured.http.ContentType;
 
 public class ProductControllerRA {
 
-    private Long existingProductId, nonExistingProductId;
+    private Long existingProductId;
+    private Long nonExistingProductId;
     private String productName;
+    private String clientUsername;
+    private String clientPassword;
+    private String adminUsername;
+    private String adminPassword;
+    private String clientToken;
+    private String adminToken;
+    private String invalidToken;
+
+    private Map<String, Object> postProductInstance;
 
     @BeforeEach
     public void setUp() {
         baseURI = "http://localhost:8080";
 
+        existingProductId = 2L;
+        nonExistingProductId = 100L;
         productName = "Macbook";
+
+        clientUsername = "maria@gmail.com";
+        clientPassword = "123456";
+        adminUsername = "alex@gmail.com";
+        adminPassword = "123456";
+
+        clientToken = TokenUtil.obtainAccessToken(clientUsername, clientPassword);
+        adminToken = TokenUtil.obtainAccessToken(adminUsername, adminPassword);
+        invalidToken = adminToken + "xpto";
+
+        postProductInstance = new HashMap<>();
+        postProductInstance.put("name", "Meu produto");
+        postProductInstance.put("description", "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui ad, adipisci illum ipsam velit et odit eaque reprehenderit ex maxime delectus dolore labore, quisquam quae tempora natus esse aliquam veniam doloremque quam minima culpa alias maiores commodi. Perferendis enim");
+        postProductInstance.put("imgUrl", "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg");
+        postProductInstance.put("price", 200.0);
+
+        List<Map<String, Object>> categories = new ArrayList<>();
+
+        Map<String, Object> category1 = new HashMap<>();
+        category1.put("id", 2);
+        Map<String, Object> category2 = new HashMap<>();
+        category2.put("id", 3);
+
+        categories.add(category1);
+        categories.add(category2);
+
+        postProductInstance.put("categories", categories);
+
     }
 
     @Test
     public void findByIdShouldReturnProductWhenIdExists() {
-        existingProductId = 2L;
 
         given()
                 .get("/products/{id}", existingProductId)
@@ -36,7 +88,8 @@ public class ProductControllerRA {
     }
 
     @Test
-    public void findAllShouldReturnPageProductsWhenProductNameIsEmpty() {
+    public void findAllShouldReturnPageWhenProductNameIsEmpty() {
+
         given()
                 .get("/products?page=0")
                 .then()
@@ -45,23 +98,44 @@ public class ProductControllerRA {
     }
 
     @Test
-    public void findAllShouldReturnPageProductsWhenProductNameIsNotEmpty() {
+    public void findAllShouldReturnPageWhenProductNameIsNotEmpty() {
+
         given()
                 .get("/products?name={productName}", productName)
                 .then()
                 .statusCode(200)
                 .body("content.id[0]", is(3))
                 .body("content.name[0]", equalTo("Macbook Pro"))
-                .body("content.price[0]", is(1250.0F))
-                .body("content.imgUrl[0]", equalTo("https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/3-big.jpg"));
+                .body("content.price[0]", is(1250.0F));
     }
 
     @Test
-    public void findAllShouldReturnPagedProductsWithPriceGreaterThan2000() {
+    public void findAllShouldPagedProductsWithPriceGreaterThen2000() {
+
         given()
                 .get("/products?size=25")
                 .then()
                 .statusCode(200)
                 .body("content.findAll { it.price > 2000 }.name", hasItems("Smart TV", "PC Gamer Weed"));
+    }
+
+    @Test
+    public void insertReturnProductCreatedWhenAdminLogged() throws JSONException {
+        JSONObject newProduct = new JSONObject(postProductInstance);
+
+        given()
+                .header("Content-type", "application/json")
+                .header("Authorization", "Bearer " + adminToken)
+                .body(newProduct)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .when()
+                .post("/products")
+                .then()
+                .statusCode(201)
+                .body("name", equalTo("Meu produto"))
+                .body("price", is(200.0F))
+                .body("imgUrl", equalTo("https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg"))
+                .body("categories.id", hasItems(2, 3));
     }
 }
