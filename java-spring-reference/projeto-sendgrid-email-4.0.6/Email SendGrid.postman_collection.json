@@ -1,0 +1,39 @@
+{
+	"info": {
+		"_postman_id": "0e02d105-e258-4a43-b643-c53b6a06b94c",
+		"name": "Email SendGrid",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26170376",
+		"_collection_link": "https://dsprod.postman.co/workspace/Team-Workspace~5cff5d40-2e9f-4aee-8ebe-ac37cfad24c3/collection/26170376-0e02d105-e258-4a43-b643-c53b6a06b94c?action=share&creator=26170376&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Send email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fromEmail\": \"meuusuario@seudominio.com.br\",\r\n    \"fromName\": \"Meu nome\",\r\n    \"replyTo\": \"meuusuario@seudominio.com.br\",\r\n    \"to\": \"meugmail@gmail.com\",\r\n    \"subject\": \"Testando envio de email 2\",\r\n    \"body\": \"Olá amigo,<br/><br/>Espero que esta <strong>mensagem</strong> chegue bem.<br/><br/>Um abraço!\",\r\n    \"contentType\": \"text/html\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/emails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"emails"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
