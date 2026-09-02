@@ -1,5 +1,6 @@
 package com.devsuperior.workshopmongo.services;
 
+import com.devsuperior.workshopmongo.models.dto.PostDTO;
 import com.devsuperior.workshopmongo.models.dto.UserDTO;
 import com.devsuperior.workshopmongo.models.entities.User;
 import com.devsuperior.workshopmongo.repositories.UserRepository;
@@ -44,6 +45,11 @@ public class UserService {
     public void delete(String id) {
         getEntityById(id);
         repository.deleteById(id);
+    }
+
+    public List<PostDTO> getUserPosts(String id) {
+        User user = getEntityById(id);
+        return user.getPosts().stream().map(x -> new PostDTO(x)).collect(Collectors.toList());
     }
 
     private User getEntityById(String id) {
