@@ -13,4 +13,7 @@ public interface ProductRepository extends CassandraRepository<Product, UUID> {
 
 	@AllowFiltering
 	List<Product> findByDepartment(String department);
+
+	@Query("SELECT * FROM products WHERE description LIKE :text")
+	List<Product> findByDescription(String text);
 }
