@@ -11,4 +11,6 @@ import com.devsuperior.workshopcassandra.model.entities.Product;
 
 public interface ProductRepository extends CassandraRepository<Product, UUID> {
 
+	@AllowFiltering
+	List<Product> findByDepartment(String department);
 }
