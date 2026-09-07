@@ -31,4 +31,10 @@ public class DepartmentController {
 		List<DepartmentDTO> list = service.findAll();
 		return ResponseEntity.ok(list);
 	}
+
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<DepartmentDTO> findById(@PathVariable UUID id) {
+		DepartmentDTO obj = service.findById(id);
+		return ResponseEntity.ok(obj);
+	}
 }

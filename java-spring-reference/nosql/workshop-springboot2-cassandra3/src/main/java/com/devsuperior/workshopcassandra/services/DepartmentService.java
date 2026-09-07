@@ -23,4 +23,15 @@ public class DepartmentService {
 		List<Department> list = repository.findAll();
 		return list.stream().map(x -> new DepartmentDTO(x)).collect(Collectors.toList());
 	}
+
+	public DepartmentDTO findById(UUID id) {
+		Department entity = getById(id);
+		return new DepartmentDTO(entity);
+	}
+
+	private Department getById(UUID id) {
+		Optional<Department> result = repository.findById(id);
+		return result.orElseThrow(() -> new ResourceNotFoundException("Id não encontrado"));
+	}
+
 }
