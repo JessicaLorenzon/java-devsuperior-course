@@ -49,8 +49,5 @@ public class SeedingDatabase implements CommandLineRunner {
 
         Flux<Post> insertPosts = postRepository.saveAll(Arrays.asList(post1, post2));
         insertPosts.subscribe();
-
-        maria.getPosts().addAll(Arrays.asList(post1, post2));
-        userRepository.save(maria);
     }
 }
