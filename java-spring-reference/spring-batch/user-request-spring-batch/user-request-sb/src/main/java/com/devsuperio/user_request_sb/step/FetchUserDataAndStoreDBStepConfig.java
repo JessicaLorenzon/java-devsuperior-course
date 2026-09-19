@@ -9,6 +9,7 @@ import org.springframework.batch.infrastructure.item.ItemProcessor;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class FetchUserDataAndStoreDBStepConfig {
 
     @Autowired
+    @Qualifier("transactionManagerApp")
     private PlatformTransactionManager transactionManager;
 
     @Value("${chunkSize}")
