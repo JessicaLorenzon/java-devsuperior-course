@@ -3,6 +3,7 @@ package com.devsuperior.send_book_email_spring_batch.reader;
 import com.devsuperior.send_book_email_spring_batch.domain.Book;
 import com.devsuperior.send_book_email_spring_batch.domain.User;
 import com.devsuperior.send_book_email_spring_batch.domain.UserBookLoan;
+import com.devsuperior.send_book_email_spring_batch.util.GenerateBookReturnDate;
 import org.springframework.batch.infrastructure.item.ItemReader;
 import org.springframework.batch.infrastructure.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +19,7 @@ import java.sql.SQLException;
 public class ReadUsersWithLoansCloseToReturnReaderConfig {
 
     // value to notify user is obtained by subtracting one day of number days to return book
-    int numDaysToNotifyReturn = 6;
+    int numDaysToNotifyReturn = GenerateBookReturnDate.numDaysToReturnBook - 1;
 
     @Bean
     public ItemReader<UserBookLoan> readUsersWithLoansCloseToReturnReader(@Qualifier("appDS") DataSource dataSource) {
