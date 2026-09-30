@@ -1,0 +1,110 @@
+{
+  "info": {
+    "name": "dsbooks-as",
+    "description": "Collection do Authorization Server dsbooks-as (porta 9000).\n\n## Como usar\n1. Importe o environment **dsbooks-dev** (`dsbooks-dev.postman_environment.json`) e selecione-o no canto superior direito do Postman.\n2. Para obter um token, abra a aba **Authorization** desta collection e clique em **Get New Access Token**. O fluxo Authorization Code com PKCE será disparado usando os valores do environment.\n3. As requisições a recursos protegidos (ex.: **UserInfo**) usam **Inherit auth from parent** — basta ter um token salvo na aba Authorization da collection.\n4. As requisições públicas (Discovery, AS Metadata, JWK Set) estão configuradas com **No Auth**.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      { "key": "tokenName",             "value": "dsbooks_token",                "type": "string" },
+      { "key": "grant_type",            "value": "authorization_code_with_pkce", "type": "string" },
+      { "key": "authUrl",               "value": "{{as-host}}/oauth2/authorize", "type": "string" },
+      { "key": "accessTokenUrl",        "value": "{{as-host}}/oauth2/token",     "type": "string" },
+      { "key": "clientId",              "value": "{{client-id}}",                "type": "string" },
+      { "key": "clientSecret",          "value": "{{client-secret}}",            "type": "string" },
+      { "key": "scope",                 "value": "{{scopes}}",                   "type": "string" },
+      { "key": "redirect_uri",          "value": "{{redirect-uri}}",             "type": "string" },
+      { "key": "state",                 "value": "{{state}}",                    "type": "string" },
+      { "key": "challengeAlgorithm",    "value": "S256",                         "type": "string" },
+      { "key": "code_verifier",         "value": "{{code-verifier}}",            "type": "string" },
+      { "key": "client_authentication", "value": "body",                         "type": "string" },
+      { "key": "addTokenTo",            "value": "header",                       "type": "string" },
+      { "key": "useBrowser",            "value": false,                          "type": "boolean" }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "GET OIDC Discovery Document",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": "{{as-host}}/.well-known/openid-configuration",
+            "description": "Documento de descoberta OIDC. Contém todos os endpoints do Authorization Server, algoritmos suportados, scopes, etc. O Resource Server e o cliente consultam este endpoint para auto-configuração."
+          }
+        },
+        {
+          "name": "GET OAuth2 AS Metadata",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": "{{as-host}}/.well-known/oauth-authorization-server",
+            "description": "Documento de metadados OAuth2 (RFC 8414). Similar ao OIDC Discovery, mas sem as extensões OIDC."
+          }
+        },
+        {
+          "name": "GET JWK Set (public RSA key)",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": "{{as-host}}/oauth2/jwks",
+            "description": "Conjunto de chaves públicas JSON (RFC 7517). O Resource Server usa este endpoint para obter a chave pública RSA e validar a assinatura dos JWTs sem precisar chamar o AS a cada requisição."
+          }
+        },
+        {
+          "name": "GET UserInfo",
+          "request": {
+            "method": "GET",
+            "url": "{{as-host}}/userinfo",
+            "description": "Retorna as claims do usuário autenticado (sub, name, email, etc.) conforme os scopes aprovados. Requer access_token válido com scope 'openid'.\n\nA autenticação é herdada da collection (Inherit auth from parent). Antes de chamar, obtenha um token via aba Authorization da collection (Get New Access Token)."
+          }
+        },
+        {
+          "name": "POST Token (Client Credentials)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.access_token) {",
+                  "        pm.environment.set('backend-access-token', json.access_token);",
+                  "        console.log('backend-access-token saved to environment');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "{{backend-client-id}}",     "type": "string" },
+                { "key": "password", "value": "{{backend-client-secret}}", "type": "string" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "grant_type", "value": "client_credentials" },
+                { "key": "scope",      "value": "openid" }
+              ]
+            },
+            "url": "{{as-host}}/oauth2/token",
+            "description": "Obtém um access_token via fluxo Client Credentials usando o client backend (`my-backend`). Não envolve usuário — é o fluxo machine-to-machine. As credenciais do client vão via HTTP Basic Auth (método `client_secret_basic`, padrão recomendado para m2m). O token retornado é salvo no environment como `backend-access-token` pelo script de pós-resposta. Use esse token (em vez do token herdado da collection) ao testar requisições estilo m2m, configurando o request com `Authorization: Bearer {{backend-access-token}}`."
+          }
+        }
+      ]
+    }
+  ]
+}

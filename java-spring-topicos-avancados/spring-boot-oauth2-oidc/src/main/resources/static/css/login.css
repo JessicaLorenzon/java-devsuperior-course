@@ -1,0 +1,181 @@
+:root {
+    /* Cores — paleta dark mode */
+    --color-bg:             #0e1116;
+    --color-surface:        #161b22;
+    --color-border:         #30363d;
+    --color-text:           #e6edf3;
+    --color-text-muted:     #8b949e;
+    --color-primary:        #58a6ff;
+    --color-primary-hover:  #79b8ff;
+    --color-error:          #ffa198;
+    --color-error-bg:       #3b1e1e;
+    --color-success:        #56d364;
+    --color-success-bg:     #14361d;
+
+    /* Espaçamentos */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* Raios */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+
+    /* Tipografia */
+    --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-size-sm: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 24px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-base);
+    font-size: var(--font-size-md);
+    min-height: 100vh;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+}
+
+.login-title {
+    margin: 0 0 var(--space-lg) 0;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    text-align: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.login-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-sm);
+}
+
+.login-input {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.login-input:focus {
+    border-color: var(--color-primary);
+}
+
+.login-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.login-input-wrapper .login-input {
+    flex: 1;
+    /* espaço à direita para acomodar o botão de toggle */
+    padding-right: calc(var(--space-xl) + var(--space-sm));
+}
+
+.login-input-toggle {
+    position: absolute;
+    right: var(--space-xs);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: var(--space-xs);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.login-input-toggle:hover {
+    color: var(--color-text);
+    background-color: var(--color-border);
+}
+
+.login-input-toggle:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+}
+
+.login-input-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.login-input-toggle .is-hidden {
+    display: none;
+}
+
+.login-button {
+    margin-top: var(--space-lg);
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.login-button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.login-message {
+    margin: 0 0 var(--space-md) 0;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+}
+
+.login-message--error {
+    color: var(--color-error);
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error);
+}
+
+.login-message--success {
+    color: var(--color-success);
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success);
+}
